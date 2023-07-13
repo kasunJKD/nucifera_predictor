@@ -22,7 +22,8 @@ simple coconut price predictor (Final Year project)
 
 --- 
 
-TODO:
+### TODO
+
     - [x] python_ model for lstm
     - [x] python_ store predicted data in db
     - [ ] python_ model for GRU
