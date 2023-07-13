@@ -17,12 +17,10 @@ from sklearn.preprocessing import StandardScaler
 import seaborn as sns
 
 df = pd.read_csv('Cleaned data.csv',  thousands=',')
-df
 
 train_dates = pd.to_datetime(df['Date'], dayfirst=True)
 
 cols = list(df)[1:5]
-print(cols)
 df_for_training = df[cols].astype(float)
 
 scaler = StandardScaler()

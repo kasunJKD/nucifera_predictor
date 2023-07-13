@@ -16,3 +16,28 @@ simple coconut price predictor (Final Year project)
 --> angular frontend
     - simple frontend to show dashboard
     - form to add email or sms for subscription 
+
+## Database Schema
+![alt text](https://github.com/kasunJKD/nucifera_predictor/blob/main/docs/dbSchema.png "Db schema")
+
+--- 
+
+TODO:
+    - [x] python_ model for lstm
+    - [x] python_ store predicted data in db
+    - [ ] python_ model for GRU
+    - [ ] python_ model for 1D
+    - [x] store batch by batch with plots
+    - [ ] python_ number of feature select option (notImportant)
+    - [ ] python_ feature select option (notImportant)
+    - [x] python_ upload csv file and read csv data from database 
+
+    - [ ] go_google auth for register and login users
+    - [ ] subscribe for sms service for weekly updates
+
+    - [ ] angular_basic ui with form
+    - [ ] display plots for batches 
+    - [ ] show predicted data per each model
+    - [ ] show original data used 
+
+    - [x] db schema added
