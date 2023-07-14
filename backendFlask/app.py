@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 import csv
 import psycopg2
-from .model import predictLSTM
+from model import predictLSTM
 
 app = Flask(__name__)
 
@@ -49,10 +49,8 @@ def upload():
             Price real,
             CONSTRAINT fk_model_Id
                 FOREIGN KEY(Model_Id)
-                REFERENCES models(Model_Id)
-        );
-
-        CREATE INDEX index_predictions ON batch{schema_number}.predictions (Model_Id);       
+                REFERENCES batch{schema_number}.models(Model_Id)
+        );     
         '''
         cursor.execute(create_tables_query)
         conn.commit()
@@ -74,3 +72,6 @@ def upload():
 @app.route('/predict', methods=['GET'])
 def predict():
     return predictLSTM()
+
+if __name__ == "__main__":
+    app.run(debug=True)

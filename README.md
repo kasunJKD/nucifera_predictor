@@ -26,9 +26,10 @@ simple coconut price predictor (Final Year project)
 
     - [x] python_ model for lstm
     - [x] python_ store predicted data in db
+    - [x] store batch by batch with plots
+    - [x] ----> testing check point----->
     - [ ] python_ model for GRU
     - [ ] python_ model for 1D
-    - [x] store batch by batch with plots
     - [ ] python_ number of feature select option (notImportant)
     - [ ] python_ feature select option (notImportant)
     - [x] python_ upload csv file and read csv data from database 

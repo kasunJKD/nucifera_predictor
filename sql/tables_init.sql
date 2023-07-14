@@ -1,6 +1,4 @@
-CREATE EXTENSION "pgcrypto";
-
-CREATE SCHEMA IF NOT EXISTS batch1
+CREATE SCHEMA IF NOT EXISTS batch1;
 
 CREATE TABLE IF NOT EXISTS batch1.original (
     Date varchar(30) NOT NULL,
@@ -30,10 +28,8 @@ CREATE TABLE IF NOT EXISTS batch1.predictions (
     Price real,
     CONSTRAINT fk_model_Id
         FOREIGN KEY(Model_Id)
-        REFERENCES models(Model_Id)
+        REFERENCES batch1.models(Model_Id)
 );
-
-CREATE INDEX index_predictions ON batch1.predictions (Model_Id);
 
 
 
