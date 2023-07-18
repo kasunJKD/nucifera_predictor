@@ -16,7 +16,7 @@ def predictLSTM ():
     query = "SELECT * FROM batch1.original;"
     df = pd.read_sql_query(query, conn)
 
-    train_dates = pd.to_datetime(df['Date'], dayfirst=True)
+    train_dates = pd.to_datetime(df['Date'], dayfirst=True, unit='s')
 
     cols = list(df)[1:5]
     df_for_training = df[cols].astype(float)

@@ -1,7 +1,7 @@
 # Base Image 
-FROM python:3.8
+FROM python:3.8-slim
 # MAINTAINER of the Dockerfile
-MAINTAINER Bikram <bikramatmedium@gmail.com>
+MAINTAINER kasun <kasunjayakodyofficial@gmail.com>
 # Working directory inside app
 WORKDIR /app
 #Copy the index.html file /usr/share/nginx/html/

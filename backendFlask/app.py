@@ -2,17 +2,18 @@ from flask import Flask, request, render_template
 import csv
 import psycopg2
 from model import predictLSTM
+import sys
+import codecs
+import datetime
 
 app = Flask(__name__)
 
 @app.route('/upload', methods=['POST'])
 def upload():
     file = request.files['csv_file']
-
     if file:
-        conn = psycopg2.connect(database="nuciferaDB", user="postgres", password="9221", host="localhost", port="8080")
+        conn = psycopg2.connect(database="nuciferaDB", user="postgres", password="9221", host="nucifera-db", port="5432")
         cursor = conn.cursor()
-
         #create schema
         schema_number = "1"
         create_schema_query = f"CREATE SCHEMA IF NOT EXISTS batch{schema_number};"
@@ -22,7 +23,7 @@ def upload():
         #create tables
         create_tables_query = f'''
         CREATE TABLE IF NOT EXISTS batch{schema_number}.original (
-            Date varchar(30) NOT NULL,
+            Date integer NOT NULL,
             Average_Price real,
             Rainfall_Kurunegala real,
             Rainfall_Puttalam real,
@@ -54,12 +55,29 @@ def upload():
         '''
         cursor.execute(create_tables_query)
         conn.commit()
-
-        csv_data = csv.reader(file)
+        stream = codecs.iterdecode(file.stream, 'utf-8')
+        # Read the CSV file
+        csv_data = csv.reader(stream, dialect=csv.excel)
+        # Skip the first row (header)
         next(csv_data)
-        for row in csv_data:
-            cursor.execute('''INSERT INTO batch%s.original(Date, Average_Price, Rainfall_Kurunegala,
-              Rainfall_Puttalam, Rainfall_Colombo, Temp_Kurunegala, Temp_Puttalam, Temp_Colombo) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)''', '1', row)
+        for row in csv_data:  
+            # Convert the string to a datetime object
+            date_string = row[0].replace(" ", "")  # Remove white spaces from the date_string
+            datetime_obj = datetime.datetime.strptime(date_string,"%d/%m/%Y")
+            # Convert the datetime object to Unix timestamp
+            unix_timestamp = datetime_obj.timestamp()
+
+            dd = int(unix_timestamp)
+            ap = float(row[1])
+            rk = float(row[2])
+            rp = float(row[3])
+            rc = float(row[4])
+            tk = float(row[5])
+            tp = float(row[6])
+            tc = float(row[7])
+
+            insert_statment = f'INSERT INTO batch{schema_number}.original(Date, Average_Price, Rainfall_Kurunegala,Rainfall_Puttalam, Rainfall_Colombo, Temp_Kurunegala, Temp_Puttalam,Temp_Colombo) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
+            cursor.execute(insert_statment, (dd, ap, rk, rp, rc, tk, tp, tc))
             
         conn.commit()
         cursor.close()
@@ -74,4 +92,4 @@ def predict():
     return predictLSTM()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True,port='5000')

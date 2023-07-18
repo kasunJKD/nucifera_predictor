@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS batch1;
 
 CREATE TABLE IF NOT EXISTS batch1.original (
-    Date varchar(30) NOT NULL,
+    Date integer NOT NULL,
     Average_Price real,
     Rainfall_Kurunegala real,
     Rainfall_Puttalam real,

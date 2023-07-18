@@ -17,6 +17,9 @@ simple coconut price predictor (Final Year project)
     - simple frontend to show dashboard
     - form to add email or sms for subscription 
 
+## Architecture
+![alt text](https://github.com/kasunJKD/nucifera_predictor/blob/main/docs/architecture.png "architecture")
+
 ## Database Schema
 ![alt text](https://github.com/kasunJKD/nucifera_predictor/blob/main/docs/dbSchema.png "Db schema")
 
@@ -27,14 +30,16 @@ simple coconut price predictor (Final Year project)
     - [x] python_ model for lstm
     - [x] python_ store predicted data in db
     - [x] store batch by batch with plots
-    - [x] ----> testing check point----->
+    - [x] ----> testing check point-----> DONE
+    - [x] ----> running model----> DONE
     - [ ] python_ model for GRU
     - [ ] python_ model for 1D
     - [ ] python_ number of feature select option (notImportant)
     - [ ] python_ feature select option (notImportant)
     - [x] python_ upload csv file and read csv data from database 
+    - [ ] download csv format if user wanted to add a new batch
 
-    - [ ] go_google auth for register and login users
+    - [x] go_google auth for register and login users
     - [ ] subscribe for sms service for weekly updates
 
     - [ ] angular_basic ui with form
@@ -43,3 +48,8 @@ simple coconut price predictor (Final Year project)
     - [ ] show original data used 
 
     - [x] db schema added
+
+### Bug fixes
+    - [x] flask_ db inserting data type errors fixed
+    - [x] flask_ db Date data type changed to unix time fixed
+    - [x] flask_ strings convert to floats fixed
