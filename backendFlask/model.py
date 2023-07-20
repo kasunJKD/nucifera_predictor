@@ -48,7 +48,6 @@ def predictLSTM ():
 
     model.compile(optimizer='adam', loss='mse')
     model.summary()
-    print("hit 3", file=sys.stderr)
     # fit the model
     history = model.fit(trainX, trainY, epochs=50, batch_size=16, validation_split=0.1, verbose=1)
     plt.plot(history.history['loss'], label='Training loss')
@@ -62,7 +61,6 @@ def predictLSTM ():
     plt.savefig(buffer, format='png', bbox_inches='tight')
     buffer.seek(0)
     image_base64_validation = base64.b64encode(buffer.getvalue()).decode('utf-8')
-    print("hit 4", file=sys.stderr)
 
     n_past = 200
     n_weeks_for_prediction=100
@@ -92,16 +90,15 @@ def predictLSTM ():
     plt.savefig(buffer2, format='png', bbox_inches='tight')
     buffer2.seek(0)
     image_base64_fit = base64.b64encode(buffer2.getvalue()).decode('utf-8')
-    print("hit 5", file=sys.stderr)
+
     cursor.execute('''
-        INSERT INTO batch1.models (Model_Id, Model_Name, Plot_Fit, Plot_Validation, no_features, feature_list)
-        VALUES (%s, %s, %s, %s, %s, %s)
-    ''', (1, "LSTM", image_base64_fit,image_base64_validation, 4, ['test', 'test']))
+        INSERT INTO batch1.models (Model_Id, Model_Name, Plot_Fit, Plot_Validation, no_features, feature_list, mse)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+    ''', (1, "LSTM", image_base64_fit,image_base64_validation, 4, ['test', 'test'], MSE))
 
     conn.commit()
 
     for index, row in df_forecast.iterrows():
-        #date_object = datetime.datetime.strptime(row[0], '%Y-%m-%d')
         # Get the Unix time (timestamp) from the datetime object
         unix_time = row[0].timestamp()
         query = f"INSERT INTO batch1.predictions VALUES (1, {unix_time}, {row[1]})"

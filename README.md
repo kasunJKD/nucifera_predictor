@@ -35,7 +35,7 @@ simple coconut price predictor (Final Year project)
     - [x] python_ model for GRU
     - [x] python_ model for 1D
     - [x] python_ upload csv file and read csv data from database
-    - [ ] add mean squred error per batch per model 
+    - [x] add mean squred error per batch per model 
     - [ ] python_ number of feature select option (notImportant)
     - [ ] python_ feature select option (notImportant)
     - [ ] download csv format if user wanted to add a new batch

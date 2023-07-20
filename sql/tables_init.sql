@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS batch1.models (
     Plot_Validation bytea,
     no_features integer,
     feature_list TEXT [],
+    mse real,
     PRIMARY KEY (Model_Id)
 );
 
