@@ -9,14 +9,16 @@ import seaborn as sns
 import psycopg2
 import base64
 import io
+import sys
+import datetime
 
 def predictLSTM ():
-    conn = psycopg2.connect(database="nuciferaDB", user="postgres", password="9221", host="localhost", port="8080")
+    conn = psycopg2.connect(database="nuciferaDB", user="postgres", password="9221", host="nucifera-db", port="5432")
     cursor = conn.cursor()
-    query = "SELECT * FROM batch1.original;"
+    query = "SELECT * FROM batch1.original ORDER BY average_price DESC;"
     df = pd.read_sql_query(query, conn)
-
-    train_dates = pd.to_datetime(df['Date'], dayfirst=True, unit='s')
+    td = pd.to_datetime(df['date'], dayfirst=True, unit='s')
+    train_dates = td.sort_values(ascending=False)
 
     cols = list(df)[1:5]
     df_for_training = df[cols].astype(float)
@@ -46,17 +48,21 @@ def predictLSTM ():
 
     model.compile(optimizer='adam', loss='mse')
     model.summary()
-
+    print("hit 3", file=sys.stderr)
     # fit the model
     history = model.fit(trainX, trainY, epochs=50, batch_size=16, validation_split=0.1, verbose=1)
     plt.plot(history.history['loss'], label='Training loss')
     plt.plot(history.history['val_loss'], label='Validation loss')
     plt.legend()
 
+    #A lower MSE indicates better model performance.
+    MSE = model.evaluate(trainX, trainY)
+
     buffer = io.BytesIO()
     plt.savefig(buffer, format='png', bbox_inches='tight')
     buffer.seek(0)
     image_base64_validation = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    print("hit 4", file=sys.stderr)
 
     n_past = 200
     n_weeks_for_prediction=100
@@ -72,31 +78,33 @@ def predictLSTM ():
     for time_i in predict_period_dates:
         forecast_dates.append(time_i.date())
 
-    df_forecast = pd.DataFrame({'Date':np.array(forecast_dates), 'Average_Price':y_pred_future})
-    df_forecast['Date']=pd.to_datetime(df_forecast['Date'], dayfirst=True)
+    df_forecast = pd.DataFrame({'date':np.array(forecast_dates), 'average_price':y_pred_future})
+    df_forecast['date']=pd.to_datetime(df_forecast['date'], dayfirst=True)
 
-    original = df[['Date', 'Average_Price']]
+    original = df[['date', 'average_price']]
     original.head
-    original['Date']=pd.to_datetime(original['Date'], dayfirst=True)
+    original['date']=pd.to_datetime(original['date'], dayfirst=True)
 
-    sns.lineplot(x=original['Date'], y=original['Average_Price'])
-    sns.lineplot(x=df_forecast['Date'], y=df_forecast['Average_Price'])
+    sns.lineplot(x=original['date'], y=original['average_price'])
+    sns.lineplot(x=df_forecast['date'], y=df_forecast['average_price'])
 
     buffer2 = io.BytesIO()
     plt.savefig(buffer2, format='png', bbox_inches='tight')
     buffer2.seek(0)
     image_base64_fit = base64.b64encode(buffer2.getvalue()).decode('utf-8')
-
+    print("hit 5", file=sys.stderr)
     cursor.execute('''
         INSERT INTO batch1.models (Model_Id, Model_Name, Plot_Fit, Plot_Validation, no_features, feature_list)
-        VALUES (%d, %s, %s, %s, %d, %s)
-    ''', 1, "LSTM", image_base64_fit,image_base64_validation, 4, ['test', 'test'])
+        VALUES (%s, %s, %s, %s, %s, %s)
+    ''', (1, "LSTM", image_base64_fit,image_base64_validation, 4, ['test', 'test']))
 
     conn.commit()
 
     for index, row in df_forecast.iterrows():
-        values = tuple(row)
-        query = f"INSERT INTO batch1.predictions VALUES 1, {values}"
+        #date_object = datetime.datetime.strptime(row[0], '%Y-%m-%d')
+        # Get the Unix time (timestamp) from the datetime object
+        unix_time = row[0].timestamp()
+        query = f"INSERT INTO batch1.predictions VALUES (1, {unix_time}, {row[1]})"
         cursor.execute(query)
     
     conn.commit()

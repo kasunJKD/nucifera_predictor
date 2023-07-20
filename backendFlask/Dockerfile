@@ -1,5 +1,5 @@
 # Base Image 
-FROM python:3.8-slim
+FROM python:3.8
 # MAINTAINER of the Dockerfile
 MAINTAINER kasun <kasunjayakodyofficial@gmail.com>
 # Working directory inside app

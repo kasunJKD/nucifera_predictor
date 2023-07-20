@@ -32,11 +32,12 @@ simple coconut price predictor (Final Year project)
     - [x] store batch by batch with plots
     - [x] ----> testing check point-----> DONE
     - [x] ----> running model----> DONE
-    - [ ] python_ model for GRU
-    - [ ] python_ model for 1D
+    - [x] python_ model for GRU
+    - [x] python_ model for 1D
+    - [x] python_ upload csv file and read csv data from database
+    - [ ] add mean squred error per batch per model 
     - [ ] python_ number of feature select option (notImportant)
     - [ ] python_ feature select option (notImportant)
-    - [x] python_ upload csv file and read csv data from database 
     - [ ] download csv format if user wanted to add a new batch
 
     - [x] go_google auth for register and login users
@@ -53,3 +54,4 @@ simple coconut price predictor (Final Year project)
     - [x] flask_ db inserting data type errors fixed
     - [x] flask_ db Date data type changed to unix time fixed
     - [x] flask_ strings convert to floats fixed
+    - [x] lstm model function issues fixed
