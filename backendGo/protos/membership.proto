@@ -1,0 +1,180 @@
+syntax = "proto3";
+
+package membership;
+
+option go_package = "./membership;membership";
+
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+  host: "localhost:11001";
+  info: {
+    title: "test";
+    description: "test";
+    version: "1.0";
+    contact: {
+      name: "membership";
+      url: "membership";
+      email: "membership";
+    }
+  }
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+};
+
+service DataService {
+
+  rpc signUp (Request) returns (Response) {
+    option (google.api.http) = {
+      post: "/api/membership/signUp"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      description: "Signup with email and password";
+      responses: {
+        key: "200"
+        value: {
+          examples: {
+            key: "application/json"
+            value: "{\"email\": \"email\",\"password\": \"password\",\"displayName\": \"displayName\",\"firstName\": \"firstName\",\"lastName\": \"lastName\"}"
+          }
+        }
+      }
+    };
+  }
+
+  rpc passwordSignIn (Request) returns (Response) {
+    option (google.api.http) = {
+      post: "/api/membership/passwordSignIn"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      description: "Signin with email and password";
+      responses: {
+        key: "200"
+        value: {
+          examples: {
+            key: "application/json"
+            value: "{\"email\": \"email\",\"password\": \"password\"}"
+          }
+        }
+      }
+    };
+  }
+}
+
+message Empty {
+}
+
+message Request {
+  string userId = 1 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "User identifiers in the idp system",
+    format: "string",
+  }];
+  string providerId = 2 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "Provider identifiers ex: google.com / apple / facebook.com",
+    format: "string",
+  }];
+  string accessToken = 3 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "header passed access token",
+    format: "string",
+  }];
+  bool emailVerified = 4 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "return if email is verified from identity provider",
+    format: "boolean",
+  }];
+  string email = 5 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "User email",
+    format: "string",
+  }];
+  string oauthAccessToken = 6 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "Access token by identity provider",
+    format: "string",
+  }];
+  string firstName = 7 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "User first name",
+    format: "string",
+  }];
+  string lastName = 8 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "User last name",
+    format: "string",
+  }];
+  string fullName = 9 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "User full name",
+    format: "string",
+  }];
+  string displayName = 10 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "User name (same as full name in google)",
+    format: "string",
+  }];
+  string photoUrl = 11 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "Profile picture url",
+    format: "string",
+  }];
+  string expiresIn = 12 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "Access token Expire Time",
+    format: "string",
+  }];
+  string federatedId = 13 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "Unique user id taken from identity provider",
+    format: "string",
+  }];
+  string localId = 14 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "Unique Membership id",
+    format: "uuid",
+  }];
+  string refreshToken = 15 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "User refresh token",
+    format: "string",
+  }];
+  string password = 16 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "User password",
+    format: "string",
+  }];
+  string gender = 17 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "User gender",
+    format: "string",
+  }];
+  string address = 18 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "User address",
+    format: "string",
+  }];
+  int32 age = 19 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "User age",
+    format: "integer",
+  }];
+  string experience = 20 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "User gaming experience level",
+    format: "string",
+  }];
+  int32 playingTime = 21 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "User weekly playing time",
+    format: "integer",
+  }];
+  string preferredPlatforms = 22 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "User preferred gaming platforms",
+    format: "string",
+  }];
+}
+
+message Response {
+  Users users = 1;
+  string oauthAccessToken = 2[(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "Access token by identity provider",
+    format: "string",
+  }];
+  string firstName = 3;
+  string lastName = 4;
+  string fullName = 5;
+  string expiresIn = 6;
+  string idpUrl = 7[(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    description: "Identity provider endpoint",
+    format: "string",
+  }];
+  bool isNewUser = 8;
+  string refreshToken = 9;
+}

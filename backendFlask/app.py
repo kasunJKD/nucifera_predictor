@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 import csv
 import psycopg2
-from model import predictLSTM
+from model import predictLSTM, predictGRU, predict1D
 import sys
 import codecs
 import datetime
@@ -87,9 +87,17 @@ def upload():
     
     return 'no file selected'
 
-@app.route('/predict', methods=['GET'])
-def predict():
+@app.route('/predict_lstm', methods=['GET'])
+def predictLstm():
     return predictLSTM()
+
+@app.route('/predict_gru', methods=['GET'])
+def predictGru():
+    return predictGRU()
+
+@app.route('/predict_1d', methods=['GET'])
+def predict1D():
+    return predict1D()
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True,port='5000')
