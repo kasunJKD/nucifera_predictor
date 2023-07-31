@@ -25,7 +25,7 @@ var dbConn *sql.DB
 var redisConn *redis.Client
 
 var (
-	grpcPort = getEnv("GRPC_PORT", ":8081")
+	grpcPort = getEnv("GRPC_PORT", ":81")
 	httpPort = getEnv("HTTP_PORT", ":11001")
 	host = getEnv("HOST", "0.0.0.0")
 	mem_host = getEnv("MEM_HOST", "0.0.0.0")

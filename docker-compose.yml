@@ -27,7 +27,7 @@ services:
       - POSTGRES_PASSWORD=9221
       - POSTGRES_DB=membership
     volumes:
-      - ./backendGo/sql/intial_create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./backendGo/sql/initial_create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql  
     networks:
       - nucifera
 
@@ -84,6 +84,7 @@ services:
 
 volumes:
   postgres-data:
+  redis-data:
 
 networks:
   nucifera:
