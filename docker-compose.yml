@@ -81,6 +81,16 @@ services:
       - .:/code
     networks:
       - nucifera
+  
+  frontend-app:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    ports:
+      - "44201:80"
+    restart: on-failure
+    networks:
+      - nucifera
 
 volumes:
   postgres-data:
