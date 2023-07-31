@@ -17,13 +17,11 @@ import (
 	"google.golang.org/grpc"
 	//"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/grpclog"
-	"p99system/internal/membership/handlers"
-	"p99system/internal/membership/middleware"
 	//"google.golang.org/grpc/credentials/insecure"
 	//"membership/insecure"
-	pbExample "p99system/protos/membership"
-	"p99system/third_party"
-	//"github.com/rs/cors"
+	pbExample "nucifera_backend/protos/membership"
+	"nucifera_backend/third_party"
+	"github.com/rs/cors"
 )
 
 // getOpenAPIHandler serves an OpenAPI UI.
@@ -49,54 +47,28 @@ func Run(dialAddr string) error {
 	if err != nil {
 		return fmt.Errorf("failed to register gateway: %w", err)
 	}
-
-	oa := getOpenAPIHandler()
-
-	tt := http.NewServeMux()
-	// tt.HandleFunc("/membership/authorize", handlers.HandleAuth)
-	// chainCommonMiddleware(tt, "/membership/response", handlers.HandleResponse, middleware.NewPostFormValidator(true))
-	// chainCommonMiddleware(tt, "/membership/token", handlers.HandleToken, middleware.NewPostFormValidator(false))
-	tt.HandleFunc("/membership/authorize", handlers.HandleAuth)
-	tt.HandleFunc("/membership/response", handlers.HandleResponse)
-	tt.HandleFunc("/membership/token", handlers.HandleToken)
-	tt.HandleFunc("/membership/signin/oauth", handlers.HandleOauthSignIn)
-	tt.HandleFunc("/membership/signin/response", handlers.HandleOauthSignInResponse)
-	tt.HandleFunc("/membership/oauth2/userinfo", handlers.HandleUserInfo)
-
-	// c := cors.New(cors.Options{
-	// 	AllowedOrigins: []string{"*"},
-	// 	AllowCredentials: true,
-	// 	// Enable Debugging for testing, consider disabling in production
-	// 	Debug: true,
-	// })
 	
 	port := os.Getenv("PORT")
 	if port == "" {
 		port =  os.Getenv("HTTP_PORT")[1:]
 	}
+
+	c := cors.New(cors.Options {
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"POST", "GET"},
+		AllowCredentials: true,
+		AllowedHeaders:[]string{"*"},
+		Debug: true,
+	})
+
 	gatewayAddr := ":" + port
-	gwServer := http.Server{
-		Addr: gatewayAddr,
-		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if strings.HasPrefix(r.URL.Path, "/api") {
-				gwmux.ServeHTTP(w, r)
-				return
-			}
-			if strings.HasPrefix(r.URL.Path, "/membership") {
-			 	tt.ServeHTTP(w, r)
-			 	return
-			}
-			oa.ServeHTTP(w, r)
-		}),
-	}
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasPrefix(r.URL.Path, "/api") {
+			gwmux.ServeHTTP(w, r)
+			return
+		}
+	})
 	
 	log.Info("Serving gRPC-Gateway and OpenAPI Documentation on http://", gatewayAddr)
-	return fmt.Errorf("serving gRPC-Gateway server: %w", gwServer.ListenAndServe())
-}
-
-func chainCommonMiddleware(mux *http.ServeMux, pattern string, handler http.HandlerFunc, extras ...middleware.Middleware) {
-	middlewareSlice := []middleware.Middleware{middleware.NewNotFoundMiddleware(pattern)}
-	middlewareSlice = append(middlewareSlice, extras...)
-	chain := middleware.Chain(handler, middlewareSlice...)
-	mux.HandleFunc(pattern, chain)
+	return fmt.Errorf("serving gRPC-Gateway server: %w", http.ListenAndServe(gatewayAddr, c.Handler(handler)))
 }

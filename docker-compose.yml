@@ -30,6 +30,23 @@ services:
       - ./backendGo/sql/intial_create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
     networks:
       - nucifera
+
+  membership-redis:
+    image: redis:latest
+    container_name: membership-redis
+    ports:
+#      - "6389:6379"
+      - "16389:6379"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+#      - ALLOW_EMPTY_PASSWORD=yes
+#      - REDIS_PASSWORD=9221
+    volumes:
+      - redis-data:/var/lib/redis
+#    restart: always
+    command: redis-server --requirepass 9221
+    networks:
+      - nucifera
  
   flask-app:
     build:
@@ -38,6 +55,30 @@ services:
     ports:
       - "5002:5000"
     restart: on-failure
+    networks:
+      - nucifera
+
+  membership:
+    build:
+      context: ./backendGo
+      dockerfile: ./Dockerfile
+    ports:
+      - "81:81"
+      - "11001:11001"
+    restart: on-failure
+    environment:
+      - GRPC_PORT=:81
+      - HTTP_PORT=:11001
+      - HOST=localhost
+      - MEM_HOST=membership-db
+      - MEM_PORT=5432
+      - REDIS_HOST=membership-redis
+      - REDIS_PORT=6379
+      - DB_USER=postgres
+      - PASSWORD=9221
+      - MEM_DBNAME=membership
+    volumes:
+      - .:/code
     networks:
       - nucifera
 

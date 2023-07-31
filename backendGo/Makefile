@@ -5,9 +5,6 @@ all:
 	protoc \
 		--grpc-gateway_out=protos/ \
 		protos/membership.proto
-	protoc \
-		--swagger_out=logtostderr=true:. \
-		protos/membership.proto
 
 clean:
 	rm *.pb.go *.pb.gw.go *.swagger.json
