@@ -28,9 +28,12 @@ def upload():
             Rainfall_Kurunegala real,
             Rainfall_Puttalam real,
             Rainfall_Colombo real,
-            Temp_Kurunegala real,
-            Temp_Puttalam real,
-            Temp_Colombo real,
+            Min_Temp_Kurunegala real,
+            Min_Temp_Puttalam real,
+            Min_Temp_Colombo real,
+            Max_Temp_Kurunegala real,
+            Max_Temp_Puttalam real,
+            Max_Temp_Colombo real,
             PRIMARY KEY (Date)
         );
 
@@ -39,8 +42,11 @@ def upload():
             Model_Name varchar(50),
             Plot_Fit bytea,
             Plot_Validation bytea,
+            Actual_Precited_Graph bytea,
             no_features integer,
             feature_list TEXT [],
+            mse real,
+            mape real,
             PRIMARY KEY (Model_Id)
         );
 
@@ -75,9 +81,12 @@ def upload():
             tk = float(row[5])
             tp = float(row[6])
             tc = float(row[7])
+            mtk = float(row[8])
+            mtp = float(row[9])
+            mtc = float(row[10])
 
-            insert_statment = f'INSERT INTO batch{schema_number}.original(Date, Average_Price, Rainfall_Kurunegala,Rainfall_Puttalam, Rainfall_Colombo, Temp_Kurunegala, Temp_Puttalam,Temp_Colombo) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
-            cursor.execute(insert_statment, (dd, ap, rk, rp, rc, tk, tp, tc))
+            insert_statment = f'INSERT INTO batch{schema_number}.original(Date, Average_Price, Rainfall_Kurunegala,Rainfall_Puttalam, Rainfall_Colombo, Min_Temp_Kurunegala, Min_Temp_Puttalam,Min_Temp_Colombo,Max_Temp_Kurunegala, Max_Temp_Puttalam,Max_Temp_Colombo) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+            cursor.execute(insert_statment, (dd, ap, rk, rp, rc, tk, tp, tc, mtk, mtp, mtc))
             
         conn.commit()
         cursor.close()
@@ -96,7 +105,7 @@ def predictGru():
     return predictGRU()
 
 @app.route('/predict_1d', methods=['GET'])
-def predict1D():
+def predict1Dtst():
     return predict1D()
 
 if __name__ == "__main__":

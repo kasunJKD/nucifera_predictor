@@ -6,9 +6,12 @@ CREATE TABLE IF NOT EXISTS batch1.original (
     Rainfall_Kurunegala real,
     Rainfall_Puttalam real,
     Rainfall_Colombo real,
-    Temp_Kurunegala real,
-    Temp_Puttalam real,
-    Temp_Colombo real,
+    Min_Temp_Kurunegala real,
+    Min_Temp_Puttalam real,
+    Min_Temp_Colombo real,
+    Max_Temp_Kurunegala real,
+    Max_Temp_Puttalam real,
+    Max_Temp_Colombo real,
     PRIMARY KEY (Date)
 );
 
@@ -17,9 +20,11 @@ CREATE TABLE IF NOT EXISTS batch1.models (
     Model_Name varchar(50),
     Plot_Fit bytea,
     Plot_Validation bytea,
+    Actual_Precited_Graph bytea,
     no_features integer,
     feature_list TEXT [],
     mse real,
+    mape real,
     PRIMARY KEY (Model_Id)
 );
 

@@ -9,8 +9,8 @@ import seaborn as sns
 import psycopg2
 import base64
 import io
-import sys
-import datetime
+import logging
+from inference import inference
 
 def predictLSTM ():
     conn = psycopg2.connect(database="nuciferaDB", user="postgres", password="9221", host="nucifera-db", port="5432")
@@ -20,12 +20,13 @@ def predictLSTM ():
     td = pd.to_datetime(df['date'], dayfirst=True, unit='s')
     train_dates = td.sort_values(ascending=False)
 
-    cols = list(df)[1:5]
+    cols = list(df)[1:]
     df_for_training = df[cols].astype(float)
 
     scaler = StandardScaler()
     scaler = scaler.fit(df_for_training)
     df_for_training_scaled = scaler.transform(df_for_training)
+    scaled = df_for_training_scaled
 
     trainX = []
     trainY = []
@@ -91,10 +92,12 @@ def predictLSTM ():
     buffer2.seek(0)
     image_base64_fit = base64.b64encode(buffer2.getvalue()).decode('utf-8')
 
+    mape, actualgraph = inference(df, scaled, df_for_training, model, scaler,train_dates)
+
     cursor.execute('''
-        INSERT INTO batch1.models (Model_Id, Model_Name, Plot_Fit, Plot_Validation, no_features, feature_list, mse)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
-    ''', (1, "LSTM", image_base64_fit,image_base64_validation, 4, ['test', 'test'], MSE))
+        INSERT INTO batch1.models (Model_Id, Model_Name, Plot_Fit, Plot_Validation, Actual_Precited_Graph,no_features, feature_list, mse, mape)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+    ''', (1, "LSTM", image_base64_fit,image_base64_validation,actualgraph, 10, ['rainfall', 'temp', 'price'], MSE, mape))
 
     conn.commit()
 
@@ -120,12 +123,13 @@ def predictGRU ():
     td = pd.to_datetime(df['date'], dayfirst=True, unit='s')
     train_dates = td.sort_values(ascending=False)
 
-    cols = list(df)[1:5]
+    cols = list(df)[1:]
     df_for_training = df[cols].astype(float)
 
     scaler = StandardScaler()
     scaler = scaler.fit(df_for_training)
     df_for_training_scaled = scaler.transform(df_for_training)
+    scaled = df_for_training_scaled
 
     trainX = []
     trainY = []
@@ -191,10 +195,13 @@ def predictGRU ():
     buffer2.seek(0)
     image_base64_fit = base64.b64encode(buffer2.getvalue()).decode('utf-8')
 
+
+    mape, actualgraph = inference(df, scaled, df_for_training, model, scaler,train_dates)
+
     cursor.execute('''
-        INSERT INTO batch1.models (Model_Id, Model_Name, Plot_Fit, Plot_Validation, no_features, feature_list, mse)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
-    ''', (2, "GRU", image_base64_fit,image_base64_validation, 4, ['test', 'test'], MSE))
+        INSERT INTO batch1.models (Model_Id, Model_Name, Plot_Fit, Plot_Validation, Actual_Precited_Graph,no_features, feature_list, mse, mape)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+    ''', (2, "GRU", image_base64_fit,image_base64_validation,actualgraph, 10, ['rainfall', 'temp', 'price'], MSE, mape))
 
     conn.commit()
 
@@ -219,12 +226,13 @@ def predict1D ():
     td = pd.to_datetime(df['date'], dayfirst=True, unit='s')
     train_dates = td.sort_values(ascending=False)
 
-    cols = list(df)[1:5]
+    cols = list(df)[1:]
     df_for_training = df[cols].astype(float)
 
     scaler = StandardScaler()
     scaler = scaler.fit(df_for_training)
     df_for_training_scaled = scaler.transform(df_for_training)
+    scaled = df_for_training_scaled
 
     trainX = []
     trainY = []
@@ -301,10 +309,13 @@ def predict1D ():
     buffer2.seek(0)
     image_base64_fit = base64.b64encode(buffer2.getvalue()).decode('utf-8')
 
+
+    mape, actualgraph = inference(df, scaled, df_for_training, model, scaler,train_dates)
+
     cursor.execute('''
-        INSERT INTO batch1.models (Model_Id, Model_Name, Plot_Fit, Plot_Validation, no_features, feature_list, mse)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
-    ''', (3, "1D", image_base64_fit,image_base64_validation, 4, ['test', 'test'], MSE))
+        INSERT INTO batch1.models (Model_Id, Model_Name, Plot_Fit, Plot_Validation, Actual_Precited_Graph,no_features, feature_list, mse, mape)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+    ''', (3, "1D", image_base64_fit,image_base64_validation,actualgraph, 10, ['rainfall', 'temp', 'price'], MSE, mape))
 
     conn.commit()
 
@@ -313,7 +324,7 @@ def predict1D ():
         unix_time = row[0].timestamp()
         query = f"INSERT INTO batch1.predictions VALUES (3, {unix_time}, {row[1]})"
         cursor.execute(query)
-    
+
     conn.commit()
 
     cursor.close()
