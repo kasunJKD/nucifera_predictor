@@ -23,13 +23,13 @@ export class RegisterComponent {
     });
   }
 
-  onSubmit() {
+  onSubmit() { 
     if (this.registrationForm.valid) {
       const formData = this.registrationForm.value;
 
       // Check if passwords match
       if (formData.password !== formData.confirmPassword) {
-        // Handle password mismatch (e.g., display an error message)
+        // Handle password mismatch (e.g., display an error message) test
         console.error('Passwords do not match');
         return;
       }
