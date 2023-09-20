@@ -18,8 +18,7 @@ func (c DBConfig) GetAccountInfo(ctx context.Context, req *pb.Request) (*pb.Resp
 	email := req.GetEmail()
 	log.Println(req)
 	//sqlStatement := ("select u.localId, u.createdAt, u.updatedAt, u.emailVerified, i.email, i.displayName, i.photoUrl, p.federatedId, p.providerId from users u JOIN userInfo i ON u.localId = i.localId JOIN providerUserInfo p on i.localId = p.localId where p.providerId= $1 or p.federatedId = $2")
-	sqlStatement := `select u.userId, u.createdAt, u.updatedAt, u.emailVerified, u.passwordHash,
-				 i.displayName, i.firstName, i.lastName, i.photoUrl, i.gender, i.address, i.age, i.experience, i.playingTime, i.preferredPlatforms
+	sqlStatement := `select u.userId, u.createdAt, u.updatedAt, u.emailVerified, u.passwordHash 
 				from users u JOIN userInfo i ON u.userId = i.userId
 				where u.email= $1`
 
@@ -41,7 +40,7 @@ func (c DBConfig) GetAccountInfo(ctx context.Context, req *pb.Request) (*pb.Resp
 		preferredPlatforms string
 	)
 
-	err := c.DB.QueryRow(sqlStatement, email).Scan(&userId, &createdAt, &updatedAt, &emailVerified, &passwordHash, &displayName, &firstName, &lastName, &photoUrl, &gender, &address, &age, &experience, &playingTime, &preferredPlatforms)
+	err := c.DB.QueryRow(sqlStatement, email).Scan(&userId, &createdAt, &updatedAt, &emailVerified, &passwordHash)
 
 	if err != nil {
 		log.Fatalln(err)

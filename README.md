@@ -43,7 +43,8 @@ simple coconut price predictor (Final Year project)
     - [x] go_google auth for register and login users
     - [ ] subscribe for sms service for weekly updates
 
-    - [ ] angular_basic ui with form
+    - [x] angular_basic ui with form
+    - [x] added tailwind
     - [ ] display plots for batches 
     - [ ] show predicted data per each model
     - [ ] show original data used 
@@ -55,3 +56,8 @@ simple coconut price predictor (Final Year project)
     - [x] flask_ db Date data type changed to unix time fixed
     - [x] flask_ strings convert to floats fixed
     - [x] lstm model function issues fixed
+    - [x] login issue in golang fixed
+
+### Bugs
+    - [ ] 1D is not working after getting data from database
+    

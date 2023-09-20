@@ -17,7 +17,7 @@ func PasswordSignIn (ctx context.Context, database *sql.DB, req *pb.Request) (*p
 	//check user exists -- returns true/false
 	cc := db.DBConfig{DB: database}
 	userExist, err := cc.CheckAuthUserExists(&pb.Request{Email: req.Email})
-
+	log.Printf("hit1")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,18 +29,19 @@ func PasswordSignIn (ctx context.Context, database *sql.DB, req *pb.Request) (*p
 			log.Fatal(err)
 		}
 
+		log.Printf("hit2")
 		//check request password with stored password
 		err = utils.CheckPassword(req.Password, userInfo.Users.PasswordHash)
 		if err != nil {
 			return nil, status.Errorf(codes.Internal, "Password incorrect")
 		}
-
+		log.Printf("hit3")
 		// Create user access token from id
 		userToken, err := jwt.CreateToken(&pb.Request{LocalId: userInfo.Users.UserId})
-
-		//if err != nil {
-		//	return nil, status.Errorf(codes.Internal, "cannot generate access token")
-		//}
+		log.Printf("hit4")
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "cannot generate access token")
+		}
 
 		//return response
 		res := &pb.Response{
