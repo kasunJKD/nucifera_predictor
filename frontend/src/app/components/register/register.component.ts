@@ -29,7 +29,7 @@ export class RegisterComponent {
 
       // Check if passwords match
       if (formData.password !== formData.confirmPassword) {
-        // Handle password mismatch (e.g., display an error message) test
+        // Handle password mismatch (e.g., display an error message) test test
         console.error('Passwords do not match');
         return;
       }
