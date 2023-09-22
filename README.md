@@ -41,6 +41,8 @@ simple coconut price predictor (Final Year project)
     - [ ] download csv format if user wanted to add a new batch
 
     - [x] go_google auth for register and login users
+    - [x] create db connection for model database
+    - [x] select all data from batch data and prediction retrival
     - [ ] subscribe for sms service for weekly updates
 
     - [x] angular_basic ui with form
@@ -59,5 +61,5 @@ simple coconut price predictor (Final Year project)
     - [x] login issue in golang fixed
 
 ### Bugs
-    - [ ] 1D is not working after getting data from database
+    - [x] 1D is not working after getting data from database
     

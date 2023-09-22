@@ -24,6 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 type DataServiceClient interface {
 	SignUp(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
 	PasswordSignIn(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
+	GetModelDataByBatch(ctx context.Context, in *BatchRequest, opts ...grpc.CallOption) (*BatchResponseList, error)
+	GetPredictedValuesByModelId(ctx context.Context, in *PredictedRequest, opts ...grpc.CallOption) (*PredictedResponseList, error)
 }
 
 type dataServiceClient struct {
@@ -52,12 +54,32 @@ func (c *dataServiceClient) PasswordSignIn(ctx context.Context, in *Request, opt
 	return out, nil
 }
 
+func (c *dataServiceClient) GetModelDataByBatch(ctx context.Context, in *BatchRequest, opts ...grpc.CallOption) (*BatchResponseList, error) {
+	out := new(BatchResponseList)
+	err := c.cc.Invoke(ctx, "/membership.DataService/getModelDataByBatch", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dataServiceClient) GetPredictedValuesByModelId(ctx context.Context, in *PredictedRequest, opts ...grpc.CallOption) (*PredictedResponseList, error) {
+	out := new(PredictedResponseList)
+	err := c.cc.Invoke(ctx, "/membership.DataService/getPredictedValuesByModelId", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DataServiceServer is the server API for DataService service.
 // All implementations must embed UnimplementedDataServiceServer
 // for forward compatibility
 type DataServiceServer interface {
 	SignUp(context.Context, *Request) (*Response, error)
 	PasswordSignIn(context.Context, *Request) (*Response, error)
+	GetModelDataByBatch(context.Context, *BatchRequest) (*BatchResponseList, error)
+	GetPredictedValuesByModelId(context.Context, *PredictedRequest) (*PredictedResponseList, error)
 	mustEmbedUnimplementedDataServiceServer()
 }
 
@@ -70,6 +92,12 @@ func (UnimplementedDataServiceServer) SignUp(context.Context, *Request) (*Respon
 }
 func (UnimplementedDataServiceServer) PasswordSignIn(context.Context, *Request) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PasswordSignIn not implemented")
+}
+func (UnimplementedDataServiceServer) GetModelDataByBatch(context.Context, *BatchRequest) (*BatchResponseList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetModelDataByBatch not implemented")
+}
+func (UnimplementedDataServiceServer) GetPredictedValuesByModelId(context.Context, *PredictedRequest) (*PredictedResponseList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPredictedValuesByModelId not implemented")
 }
 func (UnimplementedDataServiceServer) mustEmbedUnimplementedDataServiceServer() {}
 
@@ -120,6 +148,42 @@ func _DataService_PasswordSignIn_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DataService_GetModelDataByBatch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DataServiceServer).GetModelDataByBatch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/membership.DataService/getModelDataByBatch",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DataServiceServer).GetModelDataByBatch(ctx, req.(*BatchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DataService_GetPredictedValuesByModelId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PredictedRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DataServiceServer).GetPredictedValuesByModelId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/membership.DataService/getPredictedValuesByModelId",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DataServiceServer).GetPredictedValuesByModelId(ctx, req.(*PredictedRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DataService_ServiceDesc is the grpc.ServiceDesc for DataService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +198,14 @@ var DataService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "passwordSignIn",
 			Handler:    _DataService_PasswordSignIn_Handler,
+		},
+		{
+			MethodName: "getModelDataByBatch",
+			Handler:    _DataService_GetModelDataByBatch_Handler,
+		},
+		{
+			MethodName: "getPredictedValuesByModelId",
+			Handler:    _DataService_GetPredictedValuesByModelId_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

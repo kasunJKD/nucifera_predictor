@@ -22,10 +22,57 @@ service DataService {
       body: "*"
     };
   }
+
+  rpc getModelDataByBatch(BatchRequest) returns (BatchResponseList) {
+    option (google.api.http) = {
+      post: "/api/batch/data/get"
+      body: "*"
+      };
+  }
+
+  rpc getPredictedValuesByModelId (PredictedRequest) returns (PredictedResponseList) {
+    option (google.api.http) = {
+      post: "/api/batch/predictions/get"
+      body: "*"
+    };
+  }
 }
 
 message Empty {
 }
+
+message PredictedRequest {
+  int32 modelId = 1;
+}
+
+message PredictedResponse {
+  google.protobuf.Timestamp date = 1;
+  float values = 2;
+}
+
+message PredictedResponseList {
+  repeated PredictedResponse predictedResponseList = 1;
+}
+
+message BatchRequest {
+  int32 batchNumber = 1;
+}
+
+
+message BatchResponse {
+  int32 modelId = 1;
+  string modelName = 2;
+  bytes plotFit = 3;
+  bytes plotValidation = 4;
+  bytes testPredictions = 5;
+  float mse = 6;
+  float mape = 7;
+}
+
+message BatchResponseList {
+  repeated BatchResponse batchResponse = 1;
+}
+
 
 message Request {
   string userId = 1;
