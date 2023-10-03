@@ -13,6 +13,7 @@
           placeholder="Enter your email"
           required
         >
+        <div *ngIf="registrationForm.get('email').invalid && registrationForm.get('email').touched" class="text-red-500 text-sm">Please enter a valid email.</div>
       </div>
       <div class="mb-4">
         <label for="password" class="block text-gray-600">Password</label>
@@ -25,6 +26,7 @@
           placeholder="Enter your password"
           required
         >
+        <div *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').touched" class="text-red-500 text-sm">Password must be at least 6 characters.</div>
       </div>
       <div class="mb-4">
         <label for="confirmPassword" class="block text-gray-600">Confirm Password</label>
@@ -37,6 +39,7 @@
           placeholder="Confirm your password"
           required
         >
+        <div *ngIf="formErrors.confirmPassword" class="text-red-500 text-sm">{{ formErrors.confirmPassword }}</div>
       </div>
       <button
         type="submit"
@@ -45,6 +48,10 @@
         Register
       </button>
     </form>
+            <!-- Display API error if present -->
+    <div *ngIf="formErrors.message" class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md mt-2">
+      {{ formErrors.message }}
+    </div>
     <p class="mt-4 text-gray-600 text-sm text-center">
       Already have an account? <a routerLink="/login" class="text-blue-500">Log In</a>
     </p>
