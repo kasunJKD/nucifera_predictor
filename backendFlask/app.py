@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for
 import csv
 import psycopg2
 from model import predictLSTM, predictGRU, predict1D
@@ -11,6 +11,14 @@ app = Flask(__name__)
 # Define a secret key for the session
 app.secret_key = 'your_secret_key'
 
+@app.route("/")
+def redirect_to_upload():
+    return redirect(url_for("upload_file"))
+
+@app.route("/functions")
+def go_to_functions():
+    return render_template('func.html')
+
 # Define a route for the file upload page
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -19,12 +27,30 @@ def upload_file():
         if file:
             conn = psycopg2.connect(database="nuciferaDB", user="postgres", password="9221", host="nucifera-db", port="5432")
             cursor = conn.cursor()
-            
-            # create schema
-            schema_number = "1"
-            create_schema_query = f"CREATE SCHEMA IF NOT EXISTS batch{schema_number};"
-            cursor.execute(create_schema_query)
-            conn.commit()
+
+            # Initialize schema_number
+            schema_number = 1
+
+            while True:
+                # Define the schema name with the current schema_number
+                schema_name = f"batch{schema_number}"
+                
+                # Check if the schema exists
+                check_schema_query = f"SELECT schema_name FROM information_schema.schemata WHERE schema_name = '{schema_name}';"
+                cursor.execute(check_schema_query)
+                
+                # Fetch the result (should be an empty list if schema doesn't exist)
+                existing_schemas = cursor.fetchall()
+                
+                if not existing_schemas:
+                    # Schema doesn't exist, create it
+                    create_schema_query = f"CREATE SCHEMA {schema_name};"
+                    cursor.execute(create_schema_query)
+                    conn.commit()
+                    break  # Exit the loop if the schema is created successfully
+                else:
+                    # Schema already exists, increment schema_number and try again
+                    schema_number += 1
 
             # create tables
             create_tables_query = f'''
@@ -98,7 +124,7 @@ def upload_file():
             cursor.close()
             conn.close()
 
-            return 'File uploaded successfully'
+            return redirect(url_for("go_to_functions"))
 
     return render_template('upload.html')
 

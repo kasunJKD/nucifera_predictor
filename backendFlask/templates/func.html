@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Endpoint Buttons</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <button id="lstm-button" onclick="runEndpoint('/predict_lstm')">Run LSTM</button>
+    <button id="gru-button" onclick="runEndpoint('/predict_gru')">Run GRU</button>
+    <button id="1d-button" onclick="runEndpoint('/predict_1d')">Run 1D</button>
+    <div id="status"></div>
+    <script>
+        function runEndpoint(endpoint) {
+            // Disable all buttons
+            $("button").prop("disabled", true);
+
+            // Show buffering animation
+            $("#status").text("Running... Please wait.");
+            
+            // Make an AJAX request to the Flask endpoint
+            $.get(endpoint, function(data) {
+                // Display success message
+                $("#status").text("Success!");
+
+                // Re-enable all buttons
+                $("button").prop("disabled", false);
+            });
+        }
+    </script>
+</body>
+</html>

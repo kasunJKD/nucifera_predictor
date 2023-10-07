@@ -12,6 +12,10 @@ type DBConfig struct {
 	DB *sql.DB
 }
 
+type DBConfigFlask struct {
+	DB *sql.DB
+}
+
 //Connect database
 func Connect(host, port, user, password, dbname string) *sql.DB {
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+

@@ -4,15 +4,17 @@ import (
 	"context"
 	"log"
 	pb "nucifera_backend/protos/membership"
+	"strconv"
 )
 
-func (c DBConfig) GetModelDataByBatch(ctx context.Context, req *pb.BatchRequest) (*pb.BatchResponseList, error) {
+func (c DBConfigFlask) GetModelDataByBatch(ctx context.Context, req *pb.BatchRequest) (*pb.BatchResponseList, error) {
     batchNumber := req.GetBatchNumber()
+    bntostring := strconv.Itoa(int(batchNumber))
+    sqlStatement := "select u.model_Id, u.model_Name, u.plot_Fit, u.plot_Validation, u.actual_Precited_Graph, mse, mape from batch"+bntostring+".models u"
 
-    sqlStatement := `select u.model_Id, u.model_Name, u.plot_Fit, u.plot_Validation, u.actual_Precited_Graph, mse, mape 
-                    from batch$1.models u`
+    log.Println(sqlStatement)
 
-    rows, err := c.DB.Query(sqlStatement, batchNumber)
+    rows, err := c.DB.Query(sqlStatement)
     if err != nil {
         log.Fatalln(err)
         return nil, err

@@ -39,6 +39,8 @@ simple coconut price predictor (Final Year project)
     - [ ] python_ number of feature select option (notImportant)
     - [ ] python_ feature select option (notImportant)
     - [ ] download csv format if user wanted to add a new batch
+    - [x] everytime new upload happening new schema is created
+    - [x] buttons added to fire models in admin mode
 
     - [x] go_google auth for register and login users
     - [x] create db connection for model database
@@ -59,7 +61,8 @@ simple coconut price predictor (Final Year project)
     - [x] flask_ strings convert to floats fixed
     - [x] lstm model function issues fixed
     - [x] login issue in golang fixed
-
-### Bugs
     - [x] 1D is not working after getting data from database
+    - [x] golang endpoint issues fixed
+### Bugs
+
     

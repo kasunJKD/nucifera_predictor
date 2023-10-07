@@ -105,7 +105,7 @@ func (s *DataServiceServer) PasswordSignIn(ctx context.Context, req *pb.Request)
 }
 
 func (s *DataServiceServer) GetModelDataByBatch(ctx context.Context, req *pb.BatchRequest) (*pb.BatchResponseList, error) {
-	cc := db.DBConfig{DB: dbModels}
+	cc := db.DBConfigFlask {DB: dbModels}
 
 	res, err := cc.GetModelDataByBatch(ctx, req)
 	if err != nil {
@@ -116,7 +116,7 @@ func (s *DataServiceServer) GetModelDataByBatch(ctx context.Context, req *pb.Bat
 }
 
 func (s *DataServiceServer) GetPredictedValuesByModelId(ctx context.Context, req *pb.PredictedRequest) (*pb.PredictedResponseList, error) {
-	cc := db.DBConfig{DB: dbModels}
+	cc := db.DBConfigFlask{DB: dbModels}
 
 	res, err := cc.GetPredictedValuesByModelId(ctx, req)
 	if err != nil {

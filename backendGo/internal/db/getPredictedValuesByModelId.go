@@ -9,12 +9,12 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func (c DBConfig) GetPredictedValuesByModelId(ctx context.Context, req *pb.PredictedRequest) (*pb.PredictedResponseList, error) {
+func (c DBConfigFlask) GetPredictedValuesByModelId(ctx context.Context, req *pb.PredictedRequest) (*pb.PredictedResponseList, error) {
     modelId := req.GetModelId()
 
     sqlStatement := `select u.date, u.price
                     from batch1.predictions u
-                    where u.model_Id = $1`
+                    where u.model_id = $1`
 
     rows, err := c.DB.Query(sqlStatement, modelId)
     if err != nil {
@@ -28,7 +28,7 @@ func (c DBConfig) GetPredictedValuesByModelId(ctx context.Context, req *pb.Predi
 
     for rows.Next() {
         var (
-            date  time.Time
+            date  int64
             price float32
         )
 
@@ -40,7 +40,7 @@ func (c DBConfig) GetPredictedValuesByModelId(ctx context.Context, req *pb.Predi
 
         // Create a PredictedResponse for each row and add it to the slice
         predictedResponses = append(predictedResponses, &pb.PredictedResponse{
-            Date:   timestamppb.New(date),
+            Date:   timestamppb.New(time.Unix(date, 0)),
             Values: price,
         })
     }
