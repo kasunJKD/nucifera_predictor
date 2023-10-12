@@ -19,6 +19,7 @@ def predictLSTM ():
     df = pd.read_sql_query(query, conn)
     td = pd.to_datetime(df['date'], dayfirst=True, unit='s')
     train_dates = td.sort_values(ascending=False)
+    df['date'] = td
 
     cols = list(df)[1:]
     df_for_training = df[cols].astype(float)
@@ -51,18 +52,18 @@ def predictLSTM ():
     model.summary()
     # fit the model
     history = model.fit(trainX, trainY, epochs=50, batch_size=16, validation_split=0.1, verbose=1)
+    plt.figure(figsize=(10, 6))
     plt.plot(history.history['loss'], label='Training loss')
     plt.plot(history.history['val_loss'], label='Validation loss')
-    plt.legend()
-
-    #A lower MSE indicates better model performance.
-    MSE = model.evaluate(trainX, trainY)
 
     buffer = io.BytesIO()
-    plt.savefig(buffer, format='png', bbox_inches='tight')
+    plt.savefig(buffer, format='png')
     buffer.seek(0)
-    image_base64_validation = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    image_base64_validation = base64.b64encode(buffer.read()).decode()
+    plt.close()
+    buffer.close()
 
+    MSE = model.evaluate(trainX, trainY)
     n_past = 200
     n_weeks_for_prediction=100
     #prediction period should be from 2023 5 1 - 7- 14 - 21 - 27
@@ -84,13 +85,16 @@ def predictLSTM ():
     original.head
     original['date']=pd.to_datetime(original['date'], dayfirst=True)
 
+    plt.figure(figsize=(10, 6))
     sns.lineplot(x=original['date'], y=original['average_price'])
     sns.lineplot(x=df_forecast['date'], y=df_forecast['average_price'])
 
     buffer2 = io.BytesIO()
-    plt.savefig(buffer2, format='png', bbox_inches='tight')
+    plt.savefig(buffer2, format='png')
     buffer2.seek(0)
-    image_base64_fit = base64.b64encode(buffer2.getvalue()).decode('utf-8')
+    image_base64_fit = base64.b64encode(buffer2.read()).decode()
+    plt.close()
+    buffer2.close()
 
     mape, actualgraph = inference(df, scaled, df_for_training, model, scaler,train_dates)
 
@@ -122,6 +126,7 @@ def predictGRU ():
     df = pd.read_sql_query(query, conn)
     td = pd.to_datetime(df['date'], dayfirst=True, unit='s')
     train_dates = td.sort_values(ascending=False)
+    df['date'] = td
 
     cols = list(df)[1:]
     df_for_training = df[cols].astype(float)
@@ -154,17 +159,19 @@ def predictGRU ():
     model.summary()
     # fit the model
     history = model.fit(trainX, trainY, epochs=50, batch_size=16, validation_split=0.1, verbose=1)
+    plt.figure(figsize=(10, 6))
     plt.plot(history.history['loss'], label='Training loss')
     plt.plot(history.history['val_loss'], label='Validation loss')
-    plt.legend()
+
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_base64_validation = base64.b64encode(buffer.read()).decode()
+    plt.close()
+    buffer.close()
 
     #A lower MSE indicates better model performance.
     MSE = model.evaluate(trainX, trainY)
-
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format='png', bbox_inches='tight')
-    buffer.seek(0)
-    image_base64_validation = base64.b64encode(buffer.getvalue()).decode('utf-8')
 
     n_past = 200
     n_weeks_for_prediction=100
@@ -187,13 +194,16 @@ def predictGRU ():
     original.head
     original['date']=pd.to_datetime(original['date'], dayfirst=True)
 
+    plt.figure(figsize=(10, 6))
     sns.lineplot(x=original['date'], y=original['average_price'])
     sns.lineplot(x=df_forecast['date'], y=df_forecast['average_price'])
 
     buffer2 = io.BytesIO()
-    plt.savefig(buffer2, format='png', bbox_inches='tight')
+    plt.savefig(buffer2, format='png')
     buffer2.seek(0)
-    image_base64_fit = base64.b64encode(buffer2.getvalue()).decode('utf-8')
+    image_base64_fit = base64.b64encode(buffer2.read()).decode()
+    plt.close()
+    buffer2.close()
 
 
     mape, actualgraph = inference(df, scaled, df_for_training, model, scaler,train_dates)
@@ -226,8 +236,7 @@ def predict1D ():
     df = pd.read_sql_query(query, conn)
     td = pd.to_datetime(df['date'], dayfirst=True, unit='s')
     train_dates = td.sort_values(ascending=False)
-
-    print("hit2")
+    df['date'] = td
 
     cols = list(df)[1:]
     df_for_training = df[cols].astype(float)
@@ -273,21 +282,19 @@ def predict1D ():
     model.summary()
     # fit the model
     history = model.fit(trainX, trainY, epochs=50, batch_size=16, validation_split=0.1, verbose=1)
+    plt.figure(figsize=(10, 6))
     plt.plot(history.history['loss'], label='Training loss')
     plt.plot(history.history['val_loss'], label='Validation loss')
-    plt.legend()
 
-    print("hit4")
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_base64_validation = base64.b64encode(buffer.read()).decode()
+    plt.close()
+    buffer.close()
 
     #A lower MSE indicates better model performance.
     MSE = model.evaluate(trainX, trainY)
-
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format='png', bbox_inches='tight')
-    buffer.seek(0)
-    image_base64_validation = base64.b64encode(buffer.getvalue()).decode('utf-8')
-
-    print("hit44")
 
     n_past = 200
     n_weeks_for_prediction=100
@@ -311,15 +318,16 @@ def predict1D ():
     original = df[['date', 'average_price']]
     #original['date']=pd.to_datetime(original['date'], dayfirst=True)
     original.loc[:, 'date'] = pd.to_datetime(original['date'], dayfirst=True)
+    plt.figure(figsize=(10, 6))
     sns.lineplot(x=original['date'], y=original['average_price'])
     sns.lineplot(x=df_forecast['date'], y=df_forecast['average_price'])
-    
-    buffer2 = io.BytesIO()
-    plt.savefig(buffer2, format='png', bbox_inches='tight')
-    buffer2.seek(0)
-    image_base64_fit = base64.b64encode(buffer2.getvalue()).decode('utf-8')
 
-    print("hit5")
+    buffer2 = io.BytesIO()
+    plt.savefig(buffer2, format='png')
+    buffer2.seek(0)
+    image_base64_fit = base64.b64encode(buffer2.read()).decode()
+    plt.close()
+    buffer2.close()
 
 
     mape, actualgraph = inference(df, scaled, df_for_training, model, scaler,train_dates)

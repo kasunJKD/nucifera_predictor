@@ -27,6 +27,7 @@ def inference (df, scaled, df_for_training, model, scaler, train_dates):
 
     original_datetime_values = df.iloc[n_past:, 0]
 
+    plt.figure(figsize=(10, 6))
     # Plot the actual prices using a black line
     plt.plot(train_dates[n_past:],actual_values, color='black', label="Actual price")
 
@@ -41,13 +42,12 @@ def inference (df, scaled, df_for_training, model, scaler, train_dates):
     # Set the y-axis label using the company name
     plt.ylabel("coconut price")
 
-    # Display a legend to differentiate the actual and predicted prices
-    plt.legend()
-
     buffer = io.BytesIO()
-    plt.savefig(buffer, format='png', bbox_inches='tight')
+    plt.savefig(buffer, format='png')
     buffer.seek(0)
-    acual_predicted_graph_lstm = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    acual_predicted_graph_lstm = base64.b64encode(buffer.read()).decode()
+    plt.close()
+    buffer.close()
 
     # Calculate Mean Squared Error (MSE) manually
     Mape = np.mean(np.abs((actual_values - y_pred_future)/actual_values)) * 100
