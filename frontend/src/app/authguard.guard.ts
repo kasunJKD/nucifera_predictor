@@ -11,7 +11,7 @@ export class AuthGuard{
   canActivate(): boolean {
     // Check if the user is authenticated (e.g., by checking the presence of the JWT token)
     const token = localStorage.getItem('token');
-    if (token) {
+    if ((token) && token != undefined) {
       return true;
     } else {
       // If not authenticated, redirect to the login page
