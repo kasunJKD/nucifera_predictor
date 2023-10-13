@@ -2,8 +2,9 @@
     <!-- Table header -->
     <thead>
       <tr>
-        <th class="border px-4 py-2">Model ID</th>
-        <th class="border px-4 py-2">Model Name</th>
+        <th class="border px-4 py-2">{{data.batchResponse[0].modelName}}</th>
+        <th class="border px-4 py-2">{{data.batchResponse[1].modelName}}</th>
+        <th class="border px-4 py-2">{{data.batchResponse[2].modelName}}</th>
       </tr>
     </thead>
 
@@ -11,18 +12,78 @@
     <tbody>
       <tr>
         <td class="border px-4 py-2">
-          <div>Model ID: {{ data.batchResponse[0].modelId }}</div>
           <div>Model Name: {{ data.batchResponse[0].modelName }}</div>
         </td>
         <td class="border px-4 py-2">
-          <div>Model ID: {{ data.batchResponse[1].modelId }}</div>
           <div>Model Name: {{ data.batchResponse[1].modelName }}</div>
+        </td>
+        <td class="border px-4 py-2">
+          <div>Model Name: {{ data.batchResponse[2].modelName }}</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="border px-4 py-2">
+          <div>MSE: {{ data.batchResponse[0].mse }}</div>
+        </td>
+        <td class="border px-4 py-2">
+          <div>MSE: {{ data.batchResponse[1].mse }}</div>
+        </td>
+        <td class="border px-4 py-2">
+          <div>MSE: {{ data.batchResponse[2].mse }}</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="border px-4 py-2">
+          <div>MAPE: {{ data.batchResponse[0].mape }}</div>
+        </td>
+        <td class="border px-4 py-2">
+          <div>MAPE: {{ data.batchResponse[1].mape }}</div>
+        </td>
+        <td class="border px-4 py-2">
+          <div>MAPE: {{ data.batchResponse[2].mape }}</div>
+        </td>
+      </tr>
+       <tr>
+        <td class="border px-4 py-2">
+          <div>Prediction Plot</div>
+          <img [src]="lstmplotFit" alt="Image">
+        </td>
+        <td class="border px-4 py-2">
+          <div>Prediction Plot</div>
+          <img [src]="gruplotFit" alt="Image">
+        </td>
+        <td class="border px-4 py-2">
+          <div>Prediction Plot</div>
+          <img [src]="dplotFit" alt="Image">
+        </td>
+      </tr>
+      <tr>
+        <td class="border px-4 py-2">
+          <div>Plot Validation</div>
+          <img [src]="lstmPlotValidation" alt="Image">
+        </td>
+        <td class="border px-4 py-2">
+          <div>Plot Validation</div>
+          <img [src]="gruPlotValidation" alt="Image">
+        </td>
+        <td class="border px-4 py-2">
+          <div>Plot Validation</div>
+          <img [src]="dPlotValidation" alt="Image">
+        </td>
+      </tr>
+      <tr>
+        <td class="border px-4 py-2">
+          <div>Test set</div>
+          <img [src]="lstmTestPredictions" alt="Image">
+        </td>
+        <td class="border px-4 py-2">
+          <div>Test set</div>
+          <img [src]="gruTestPredictions" alt="Image">
+        </td>
+        <td class="border px-4 py-2">
+          <div>Test set</div>
+          <img [src]="dTestPredictions" alt="Image">
         </td>
       </tr>
     </tbody>
   </table>
-
-<div>
-  <h1>Home Page</h1>
-  <img [src]="imageSrc" alt="Image">
-</div>
