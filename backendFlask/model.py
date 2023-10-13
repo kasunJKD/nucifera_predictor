@@ -18,8 +18,8 @@ def predictLSTM ():
     query = "SELECT * FROM batch1.original ORDER BY average_price DESC;"
     df = pd.read_sql_query(query, conn)
     td = pd.to_datetime(df['date'], dayfirst=True, unit='s')
-    train_dates = td.sort_values(ascending=False)
     df['date'] = td
+    train_dates = td.sort_values(ascending=False)
 
     cols = list(df)[1:]
     df_for_training = df[cols].astype(float)

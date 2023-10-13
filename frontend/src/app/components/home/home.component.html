@@ -1,17 +1,26 @@
-<div class="container mx-auto">
-  <!-- Navigation bar -->
-  <nav class="bg-blue-500 p-4">
-    <ul class="flex justify-center space-x-4">
-      <li><a class="text-white" routerLink="/">Home</a></li>
-      <li><a class="text-white" routerLink="/predictions">Predictions</a></li>
-      <li><a class="text-white" routerLink="/original-data">Original Data</a></li>
-    </ul>
-  </nav>
-
   <table class="table-auto w-full">
-    <!-- ... (your table content) ... -->
+    <!-- Table header -->
+    <thead>
+      <tr>
+        <th class="border px-4 py-2">Model ID</th>
+        <th class="border px-4 py-2">Model Name</th>
+      </tr>
+    </thead>
+
+       <!-- Table body -->
+    <tbody>
+      <tr>
+        <td class="border px-4 py-2">
+          <div>Model ID: {{ data.batchResponse[0].modelId }}</div>
+          <div>Model Name: {{ data.batchResponse[0].modelName }}</div>
+        </td>
+        <td class="border px-4 py-2">
+          <div>Model ID: {{ data.batchResponse[1].modelId }}</div>
+          <div>Model Name: {{ data.batchResponse[1].modelName }}</div>
+        </td>
+      </tr>
+    </tbody>
   </table>
-</div>
 
 <div>
   <h1>Home Page</h1>
