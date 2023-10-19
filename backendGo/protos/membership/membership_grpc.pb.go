@@ -26,6 +26,7 @@ type DataServiceClient interface {
 	PasswordSignIn(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
 	GetModelDataByBatch(ctx context.Context, in *BatchRequest, opts ...grpc.CallOption) (*BatchResponseList, error)
 	GetPredictedValuesByModelId(ctx context.Context, in *PredictedRequest, opts ...grpc.CallOption) (*PredictedResponseList, error)
+	GetOriginalData(ctx context.Context, in *OriginalDataRequest, opts ...grpc.CallOption) (*OriginalDataList, error)
 }
 
 type dataServiceClient struct {
@@ -72,6 +73,15 @@ func (c *dataServiceClient) GetPredictedValuesByModelId(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *dataServiceClient) GetOriginalData(ctx context.Context, in *OriginalDataRequest, opts ...grpc.CallOption) (*OriginalDataList, error) {
+	out := new(OriginalDataList)
+	err := c.cc.Invoke(ctx, "/membership.DataService/getOriginalData", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DataServiceServer is the server API for DataService service.
 // All implementations must embed UnimplementedDataServiceServer
 // for forward compatibility
@@ -80,6 +90,7 @@ type DataServiceServer interface {
 	PasswordSignIn(context.Context, *Request) (*Response, error)
 	GetModelDataByBatch(context.Context, *BatchRequest) (*BatchResponseList, error)
 	GetPredictedValuesByModelId(context.Context, *PredictedRequest) (*PredictedResponseList, error)
+	GetOriginalData(context.Context, *OriginalDataRequest) (*OriginalDataList, error)
 	mustEmbedUnimplementedDataServiceServer()
 }
 
@@ -98,6 +109,9 @@ func (UnimplementedDataServiceServer) GetModelDataByBatch(context.Context, *Batc
 }
 func (UnimplementedDataServiceServer) GetPredictedValuesByModelId(context.Context, *PredictedRequest) (*PredictedResponseList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPredictedValuesByModelId not implemented")
+}
+func (UnimplementedDataServiceServer) GetOriginalData(context.Context, *OriginalDataRequest) (*OriginalDataList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOriginalData not implemented")
 }
 func (UnimplementedDataServiceServer) mustEmbedUnimplementedDataServiceServer() {}
 
@@ -184,6 +198,24 @@ func _DataService_GetPredictedValuesByModelId_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DataService_GetOriginalData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OriginalDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DataServiceServer).GetOriginalData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/membership.DataService/getOriginalData",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DataServiceServer).GetOriginalData(ctx, req.(*OriginalDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DataService_ServiceDesc is the grpc.ServiceDesc for DataService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -206,6 +238,10 @@ var DataService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getPredictedValuesByModelId",
 			Handler:    _DataService_GetPredictedValuesByModelId_Handler,
+		},
+		{
+			MethodName: "getOriginalData",
+			Handler:    _DataService_GetOriginalData_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

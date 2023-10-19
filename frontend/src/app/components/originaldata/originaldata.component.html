@@ -1,0 +1,36 @@
+<table>
+    <thead>
+       <tr>
+        <th class="bg-gray-200 border px-4 py-2"></th>
+      <th class="bg-gray-200 border px-4 py-2">Date</th>
+      <th class="bg-gray-200 border px-4 py-2">Price Per kilo</th>
+      <th class="bg-gray-200 border px-4 py-2">Rainfall_colombo</th>
+      <th class="bg-gray-200 border px-4 py-2">Rainfall_puttalam</th>
+      <th class="bg-gray-200 border px-4 py-2">Rainfall_kurunegala</th>
+      <th class="bg-gray-200 border px-4 py-2">Min_Temp_colombo</th>
+      <th class="bg-gray-200 border px-4 py-2">Min_Temp_puttalam</th>
+      <th class="bg-gray-200 border px-4 py-2">Min_Temp_kurunegala</th>
+      <th class="bg-gray-200 border px-4 py-2">Max_Temp_colombo</th>
+      <th class="bg-gray-200 border px-4 py-2">Max_Temp_puttalam</th>
+      <th class="bg-gray-200 border px-4 py-2">Max_Temp_kurunegala</th>
+    </tr>
+    </thead>
+   <tbody>
+    <ng-container *ngFor="let item of data.originalDataList; let i = index">
+    <tr>
+        <td class="border px-4 py-2">{{ i + 1 }}</td>
+      <td class="border px-4 py-2">{{ item.date }}</td>
+      <td class="border px-4 py-2">{{ item.prices }}</td>
+      <td class="border px-4 py-2">{{ item.rainfallColombo }}</td>
+      <td class="border px-4 py-2">{{ item.rainfallPuttalam }}</td>
+      <td class="border px-4 py-2">{{ item.rainfallKurunegala }}</td>
+      <td class="border px-4 py-2">{{ item.minTempColombo }}</td>
+      <td class="border px-4 py-2">{{ item.minTempPuttalam }}</td>
+      <td class="border px-4 py-2">{{ item.minTempKurunegala }}</td>
+      <td class="border px-4 py-2">{{ item.maxTempColombo }}</td>
+      <td class="border px-4 py-2">{{ item.maxTempPuttalam }}</td>
+      <td class="border px-4 py-2">{{ item.maxTempKurunegala }}</td>
+    </tr>
+  </ng-container>
+  </tbody>
+</table>

@@ -1,0 +1,25 @@
+<table class="w-full border-collapse">
+    <tr>
+      <th colspan="2" class="bg-gray-200 p-2">LSTM</th>
+      <th colspan="2" class="bg-gray-200 p-2">GRU</th>
+      <th colspan="2" class="bg-gray-200 p-2">1D</th>
+    </tr>
+    <tr>
+      <th class="bg-gray-100 p-2">Date</th>
+      <th class="bg-gray-100 p-2">Price</th>
+      <th class="bg-gray-100 p-2">Date</th>
+      <th class="bg-gray-100 p-2">Price</th>
+      <th class="bg-gray-100 p-2">Date</th>
+      <th class="bg-gray-100 p-2">Price</th>
+    </tr>
+    <ng-container *ngFor="let item of data.predictedResponseList; let i = index">
+    <tr>
+      <td class="border p-2">{{ item.date }}</td>
+      <td class="border p-2">{{ item.values }}</td>
+      <td class="border p-2">{{ data_gru.predictedResponseList[i].date }}</td>
+      <td class="border p-2">{{ data_gru.predictedResponseList[i].values }}</td>
+      <td class="border p-2">{{ data_d.predictedResponseList[i].date }}</td>
+      <td class="border p-2">{{ data_d.predictedResponseList[i].values }}</td>
+    </tr>
+  </ng-container>
+</table>

@@ -9,6 +9,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './components/home/home.component';
 import { LayoutComponent } from './layout/layout.component';
+import { PredictionsComponent } from './components/predictions/predictions.component';
+import { OriginaldataComponent } from './components/originaldata/originaldata.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { LayoutComponent } from './layout/layout.component';
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    LayoutComponent
+    LayoutComponent,
+    PredictionsComponent,
+    OriginaldataComponent
   ],
   imports: [
     BrowserModule,

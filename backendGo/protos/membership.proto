@@ -36,9 +36,38 @@ service DataService {
       body: "*"
     };
   }
+
+  rpc getOriginalData (OriginalDataRequest) returns (OriginalDataList){
+    option (google.api.http) = {
+      post: "/api/batch/original/data/get"
+      body: "*"
+    };
+  }
 }
 
 message Empty {
+}
+
+message OriginalDataRequest {
+  int32 batchId = 1;
+}
+
+message OriginalDataResponse {
+  google.protobuf.Timestamp date = 1;
+  float prices = 2;
+  float rainfall_colombo = 3;
+  float rainfall_puttalam = 4;
+  float rainfall_kurunegala = 5;
+  float min_temp_colombo = 6;
+  float min_temp_puttalam = 7;
+  float min_temp_kurunegala = 8;
+  float max_temp_colombo = 9;
+  float max_temp_puttalam = 10;
+  float max_temp_kurunegala = 11;
+}
+
+message OriginalDataList {
+  repeated OriginalDataResponse originalDataList = 1;
 }
 
 message PredictedRequest {

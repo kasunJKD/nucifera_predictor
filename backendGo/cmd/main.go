@@ -126,3 +126,14 @@ func (s *DataServiceServer) GetPredictedValuesByModelId(ctx context.Context, req
 	return res, nil
 }
 
+func (s *DataServiceServer) GetOriginalData(ctx context.Context, req *pb.OriginalDataRequest) (*pb.OriginalDataList, error) {
+	cc := db.DBConfigFlask{DB: dbModels}
+
+	res, err := cc.GetOriginalData(ctx, req)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "Original Data Retrival error")
+	}
+
+	return res, nil
+}
+
