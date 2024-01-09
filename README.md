@@ -1,5 +1,5 @@
 # nucifera_predictor
-simple coconut price predictor (Final Year project)
+Final year research
 
 --> postgres as db
 
